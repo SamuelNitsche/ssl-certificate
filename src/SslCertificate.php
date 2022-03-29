@@ -324,7 +324,7 @@ final class SslCertificate
         $certificateHosts = array_merge([$this->getCertificateDomain()], $this->getAdditionalDomains());
 
         foreach ($certificateHosts as $certificateHost) {
-            if ($host === $certificateHost) {
+            if (strtolower($host) === strtolower($certificateHost)) {
                 return true;
             }
 
