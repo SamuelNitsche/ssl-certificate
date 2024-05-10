@@ -3,7 +3,7 @@
 namespace LiquidWeb\SslCertificate;
 
 use Throwable;
-use phpseclib\File\X509;
+use phpseclib3\File\X509;
 use LiquidWeb\SslCertificate\Exceptions\Handler;
 
 final class Downloader

@@ -3,7 +3,7 @@
 namespace LiquidWeb\SslCertificate;
 
 use Carbon\Carbon;
-use phpseclib\Math\BigInteger;
+use phpseclib3\Math\BigInteger;
 
 final class SslChain
 {

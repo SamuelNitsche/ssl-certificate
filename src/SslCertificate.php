@@ -3,7 +3,7 @@
 namespace LiquidWeb\SslCertificate;
 
 use Carbon\Carbon;
-use phpseclib\Math\BigInteger;
+use phpseclib3\Math\BigInteger;
 
 final class SslCertificate
 {
@@ -89,8 +89,8 @@ final class SslCertificate
         if (is_null($links) === true || empty($links) === true) {
             return $this;
         }
-        $this->crl = SslRevocationList::createFromUrl($links[0]);
 
+        $this->crl = SslRevocationList::createFromUrl($links[0]);
         foreach ($this->crl->getRevokedList() as $revoked) {
             if ($this->serial->equals($revoked['userCertificate'])) {
                 $this->trusted = false;

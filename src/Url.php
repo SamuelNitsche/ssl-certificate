@@ -2,7 +2,7 @@
 
 namespace LiquidWeb\SslCertificate;
 
-use League\Uri\Parser as UriParser;
+use League\Uri\Uri;
 use LiquidWeb\SslCertificate\Exceptions\InvalidUrl;
 
 final class Url
@@ -37,17 +37,16 @@ final class Url
     public function __construct(string $url)
     {
         $this->inputUrl = $url;
-        $parser = new UriParser();
-        $this->parsedUrl = $parser($this->inputUrl);
+        $this->parsedUrl = Uri::new($this->inputUrl);
 
         // Verify parsing has a host
-        if (is_null($this->parsedUrl['host'])) {
+        if (is_null($this->parsedUrl->getHost())) {
             try {
-                $this->parsedUrl = $parser('https://'.$this->inputUrl);
+                $this->parsedUrl = Uri::new('https://'.$this->inputUrl);
             } catch (\Exception $e) {
                 throw InvalidUrl::couldNotValidate($url);
             }
-            if (is_null($this->parsedUrl['host'])) {
+            if (is_null($this->parsedUrl->getHost())) {
                 throw InvalidUrl::couldNotDetermineHost($url);
             }
         }
@@ -56,7 +55,7 @@ final class Url
             throw InvalidUrl::couldNotValidate($url);
         }
 
-        $this->ipAddress = self::verifyAndGetDNS($this->parsedUrl['host']);
+        $this->ipAddress = self::verifyAndGetDNS($this->parsedUrl->getHost());
         $this->validatedURL = $url;
     }
 
@@ -76,7 +75,7 @@ final class Url
 
     public function getHostName(): string
     {
-        return $this->parsedUrl['host'];
+        return $this->parsedUrl->getHost();
     }
 
     public function getValidatedURL(): string
@@ -86,7 +85,7 @@ final class Url
 
     public function getPort(): string
     {
-        return (isset($this->parsedUrl['port'])) ? $this->parsedUrl['port'] : '443';
+        return (string) ($this->parsedUrl->getPort() ?? '443');
     }
 
     public function getTestURL(): string
